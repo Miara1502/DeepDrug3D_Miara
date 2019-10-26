@@ -36,19 +36,3 @@ voxel = np.zeros(shape = (L, 14, 32, 32, 32),dtype = np.float64)
 label = np.zeros(shape = (L,), dtype = int)
 cnt = 0
 
-#Lecture des fichiers .npy
-'''for filename in os.listdir(deepdrug3d_voxel_data):
-    protein_name = filename[0:-4]
-    full_path = voxel_folder + '/' + filename
-    temp = np.load(full_path)
-    voxel[cnt,:] = temp
-    if protein_name in atps:
-        label[cnt] = 0
-    elif protein_name in hemes:
-        label[cnt] = 1
-    else:
-        print protein_name
-        print 'Something is wrong...'
-        break
-    cnt += 1
-'''
