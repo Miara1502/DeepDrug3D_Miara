@@ -1,6 +1,7 @@
 # -*- coding: utf-8  -*-
 
-"""Module qui contient tous les fonctions utilisés pour le projet : Deep Learning Binding pocket
+"""Module qui contient tous les fonctions utilisés pour le projet : Deep Learning
+Binding pocket
 """
 import sys
 import os
@@ -14,7 +15,7 @@ import random
 
 #Lecture des datas :
 def load_ligand(file):
-    ''' read a ligand file and return a np data frame
+    ''' read a ligand file and return a list as a np data frame
     '''
     list_ligand = np.loadtxt(file, dtype = str)
     return list_ligand
@@ -50,15 +51,20 @@ def load_voxel(voxel_files , file_number, nucleotide_list , hemes_list,
             break
     features = np.array(features)
     targets = np.array(targets)
-    print(targets)
     controls = np.array(controls)
     steroids = np.array(steroids)
-    '''
+
     np.save('features', features)
     np.save('targets', targets)
     np.save('controls', controls)
     np.save('steroides', steroids)
-    '''
+    
+    print('features: ', features.shape)
+    print('targets: ', targets.shape)
+    print('control:', controls.shape)
+    print('stero: ', steroids.shape)
+
+
 def main():
     parser=argparse.ArgumentParser(description="Deepdrug traitement fichiers.")
     parser.add_argument("-n", "--nb-files",
