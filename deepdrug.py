@@ -29,39 +29,37 @@ def load_voxel(voxel_files , file_number, nucleotide_list , hemes_list,
     '''
     targets= []
     features= []
-    controls= []
     steroids = []
     for voxel in voxel_files[:file_number]:
         name = voxel[22:-4]
         if name in nucleotide_list:
             features.append(np.load(voxel))
-            target = [1,0]
+            target = [1,0,0]
             targets.append(target)
         elif name in hemes_list:
             features.append(np.load(voxel))
-            target = [0,1]
+            target = [0,1,0]
+            targets.append(target)
+        elif name in control_list:
+            c = np.load(voxel)
+            features.append(np.reshape(c,(14,32,32,32)))
+            target = [0,0,1]
             targets.append(target)
         elif name in steroid_list:
             steroid = np.load(voxel)
             steroids.append(np.reshape(steroid,(14,32,32,32)))
-        elif name in control_list:
-            c = np.load(voxel)
-            controls.append(np.reshape(c,(14,32,32,32)))
         else:
             break
     features = np.array(features)
     targets = np.array(targets)
-    controls = np.array(controls)
     steroids = np.array(steroids)
 
     np.save('features', features)
     np.save('targets', targets)
-    np.save('controls', controls)
     np.save('steroides', steroids)
-    
+
     print('features: ', features.shape)
     print('targets: ', targets.shape)
-    print('control:', controls.shape)
     print('stero: ', steroids.shape)
 
 
