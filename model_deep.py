@@ -6,7 +6,9 @@ from sklearn.model_selection import train_test_split
 features = np.load('features.npy')
 targets = np.load('targets.npy')
 X_control = np.load('controls.npy') #ajouter y control pour faire des courbes ROC
+
 X_train, X_valid, y_train, y_valid = train_test_split(features, targets, test_size=0.05, random_state=42)
+#Split arrays or matrices into random train and test subsets
 
 # Création du model
 from keras.models import Sequential
@@ -19,7 +21,7 @@ model = Sequential()
 model.add(Convolution3D(input_shape = (14,32,32,32), filters=32, kernel_size=8, padding='valid', data_format='channels_first'))
 model.add(LeakyReLU(alpha = 0.1))
 model.add(MaxPooling3D(pool_size=(2,2,2), padding='valid', data_format='channels_first'))
-model.add(Dropout(0.4))
+model.add(Dropout(0.2))
 
         # 2ème convolution
 
@@ -33,7 +35,7 @@ model.add(Dropout(0.4))
 model.add(Convolution3D(filters=128, kernel_size=3, padding='valid', data_format='channels_first',))
 model.add(LeakyReLU(alpha = 0.1))
 model.add(MaxPooling3D(pool_size=(2,2,2), strides=None, padding='valid', data_format='channels_first'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.4))
 
         # FC 1
 model.add(Flatten())
