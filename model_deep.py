@@ -1,61 +1,64 @@
-# Lecture des données
+# -*- coding: utf-8  -*-
+
+"""Module qui contient tous les fonctions pour la création et l'évaluation du
+modèle
+"""
+
 import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Convolution3D, Flatten, MaxPooling3D, Dropout, Activation
+from keras.layers.advanced_activations import LeakyReLU
+from keras.callbacks import EarlyStopping
+
 from sklearn.model_selection import train_test_split
 
+def my_model():
+    model = Sequential()
+    model.add(Convolution3D(input_shape=(14,32,32,32),filters=64,kernel_size=5,
+                            padding='valid', data_format='channels_first'))
+    model.add(LeakyReLU(alpha = 0.1))
+            # Dropout 1
+    model.add(Dropout(0.2))
+            # 2ème convolution
+    model.add(Convolution3D(filters=64, kernel_size=3, padding='valid',
+                            data_format='channels_first',))
+    model.add(LeakyReLU(alpha = 0.1))
+    model.add(MaxPooling3D(pool_size=(2,2,2), strides=None, padding='valid',
+                            data_format='channels_first'))
+            # Dropout 2
+    model.add(Dropout(0.4))
+            # Fully connected layer 1
+    model.add(Flatten())
+    model.add(Dense(128))
+    model.add(LeakyReLU(alpha = 0.1))
 
-features = np.load('features.npy')
-targets = np.load('targets.npy')
-X_control = np.load('controls.npy') #ajouter y control pour faire des courbes ROC
+            # Dropout 3
+    model.add(Dropout(0.4))
+            # Fully connected layer 2
+    model.add(Dense(3))
+    model.add(Activation('softmax'))
+    return model
 
-X_train, X_valid, y_train, y_valid = train_test_split(features, targets, test_size=0.05, random_state=42)
-#Split arrays or matrices into random train and test subsets
+def training(model , x_train , y_train , x_test , y_test):
+    model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
+    EarlyStopping(monitor='val_loss',min_delta=0.1,patience=6,verbose=0,mode='auto',
+    baseline=None, restore_best_weights=False)
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=5)
 
-# Création du model
-from keras.models import Sequential
-from keras.layers import Dense, Convolution3D, Flatten, MaxPooling3D, Dropout , Activation
-from keras.layers.advanced_activations import LeakyReLU
-model = Sequential()
 
-        # 1ère convolution
 
-model.add(Convolution3D(input_shape = (14,32,32,32), filters=64, kernel_size=8, padding='valid', data_format='channels_first'))
-model.add(LeakyReLU(alpha = 0.1))
-model.add(MaxPooling3D(pool_size=(2,2,2), padding='valid', data_format='channels_first'))
-model.add(Dropout(0.2))
+def prediction(model, x) :
+    prediction = model.predict(x)
+    return prediction
 
-        # 2ème convolution
+def main():
+    features = np.load('features.npy')
+    targets = np.load('targets.npy')
+    x_train,x_test,y_train,y_test=train_test_split(
+    features, targets,test_size=0.4,random_state=42)
 
-model.add(Convolution3D(filters=32, kernel_size=5, padding='valid', data_format='channels_first',))
-model.add(LeakyReLU(alpha = 0.2))
-model.add(MaxPooling3D(pool_size=(2,2,2), strides=None, padding='valid', data_format='channels_first'))
-model.add(Dropout(0.4))
+    model = my_model()
+    model_training = training(model,x_train , y_train , x_test , y_test)
 
-        # 3ème convolution
-#kernel_size = 5
-model.add(Convolution3D(filters=128, kernel_size=3, padding='valid', data_format='channels_first',))
-model.add(LeakyReLU(alpha = 0.1))
-model.add(MaxPooling3D(pool_size=(2,2,2), strides=None, padding='valid', data_format='channels_first'))
-model.add(Dropout(0.4))
-
-        # FC 1
-model.add(Flatten())
-model.add(Dense(128))
-model.add(LeakyReLU(alpha = 0.1))
-model.add(Dropout(0.4))
-        # Fully connected layer 2 to shape (2) for 2 classes
-model.add(Dense(2))
-model.add(Activation('softmax'))
-
-## Compilation
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-## Training
-model.fit(X_train, y_train, validation_data=(X_valid, y_valid), epochs=3)
-
-model.summary()
-
-## Prédiction
-'''
-Y_control = model.predict(X_control[:4])
-for i in range(4):
-    print("X=%s, Predicted=%s" % (X_control[i], Y_control[i]))
-'''
+if __name__ == "__main__":
+    main()

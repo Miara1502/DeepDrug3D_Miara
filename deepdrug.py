@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 
-"""Module qui contient tous les fonctions utilisés pour le projet : Deep Learning
-Binding pocket
+"""Module qui contient tous les fonctions utilisés pour la creéation des données
+utilisés par le modèle Deepdrug3D 
 """
 import sys
 import os
