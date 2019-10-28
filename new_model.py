@@ -45,6 +45,6 @@ model.add(Activation('softmax'))
 ## Compilation
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 ## Training
-model.fit(X_train, y_train, validation_data=(X_valid, y_valid), epochs=3)
+model.fit(X_train, y_train, validation_data=(X_valid, y_valid), epochs=5)
 
 model.summary()
