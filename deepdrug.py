@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 
 """Module qui contient tous les fonctions utilisés pour la creéation des données
-utilisés par le modèle Deepdrug3D 
+utilisés par le modèle Deepdrug3D
 """
 import sys
 import os
@@ -34,16 +34,19 @@ def load_voxel(voxel_files , file_number, nucleotide_list , hemes_list,
         name = voxel[22:-4]
         if name in nucleotide_list:
             features.append(np.load(voxel))
-            target = [1,0,0]
+            #target = [1,0,0]
+            target = 0
             targets.append(target)
         elif name in hemes_list:
             features.append(np.load(voxel))
-            target = [0,1,0]
+            #target = [0,1,0]
+            target = 1
             targets.append(target)
         elif name in control_list:
             c = np.load(voxel)
             features.append(np.reshape(c,(14,32,32,32)))
-            target = [0,0,1]
+            #target = [0,0,1]
+            target = 2
             targets.append(target)
         elif name in steroid_list:
             steroid = np.load(voxel)
