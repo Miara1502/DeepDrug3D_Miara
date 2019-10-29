@@ -20,16 +20,17 @@ def my_model():
             # 1ere Convolution
     model.add(Convolution3D(input_shape = (14,32,32,32), filters=64, kernel_size=5, padding='valid', data_format='channels_first'))
     model.add(LeakyReLU(alpha = 0.1))
-    model.add(MaxPooling3D(pool_size=(2,2,2), padding='valid', data_format='channels_first'))
+    #model.add(MaxPooling3D(pool_size=(2,2,2), padding='valid', data_format='channels_first'))
             # Dropout 1
-    #model.add(Dropout(0.2))
+    model.add(Dropout(0.2))
 
             # 2ème convolution
-    model.add(Convolution3D(filters=128, kernel_size=3, padding='valid', data_format='channels_first',))
-    model.add(LeakyReLU(alpha = 0.1))
+    model.add(Convolution3D(filters=64, kernel_size=3, padding='valid', data_format='channels_first',))
+    model.add(LeakyReLU(alpha = 0.2))
     model.add(MaxPooling3D(pool_size=(2,2,2), strides=None, padding='valid', data_format='channels_first'))
             # Dropout 2
-    model.add(Dropout(0.2))
+    model.add(Dropout(0.4))
+
 
             # FC 1
     model.add(Flatten())
@@ -45,8 +46,8 @@ def my_model():
     return model
 
 def training(model , x_train , y_train , x_test , y_test):
-    model.compile(optimizer='adam',loss='mean_squared_error',metrics=['accuracy'])
-    EarlyStopping(monitor='val_loss',min_delta=0.1,patience=6,verbose=2,mode='auto',
+    model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
+    EarlyStopping(monitor='val_loss',min_delta=0.1,patience=4,verbose=1,mode='auto',
     baseline=None, restore_best_weights=False)
     model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=3, batch_size = 10)
     val_loss , val_acc = model.evaluate(x_test, y_test)
