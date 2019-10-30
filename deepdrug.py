@@ -6,13 +6,10 @@ utilisés par le modèle Deepdrug3D
 import sys
 import os
 import argparse
-
 import numpy as np
 import pandas as pd
 import glob
 import random
-
-
 #Lecture des datas :
 def load_ligand(file):
     ''' read a ligand file and return a list as a np data frame
@@ -52,35 +49,31 @@ def load_voxel(voxel_files , file_number, nucleotide_list , hemes_list,
         elif name in steroid_list:
             steroid = np.load(voxel)
             steroids.append(np.reshape(steroid,(14,32,32,32)))
-
     features = np.array(features)
     targets = np.array(targets)
     steroids = np.array(steroids)
     np.save('features', features)
     np.save('targets', targets)
     np.save('steroides', steroids)
-
     print('features: ', features.shape)
     print('targets: ', targets.shape)
     print('stero: ', steroids.shape)
 
 
 def main():
-    ''' Main of the programm 
+    ''' Main of the programm
     '''
     parser=argparse.ArgumentParser(description="Deepdrug traitement fichiers.")
     parser.add_argument("-n", "--nb-files",
                         help="Selectionner le nombre de fichiers voxel à utiliser",
                         type=int, default=200, dest="nFile")
     args = parser.parse_args()
-
     voxel_folder = 'deepdrug3d_voxel_data'
     files = glob.glob(voxel_folder+'/*.npy')
     nucleotides_list = load_ligand('nucleotide.list')
     hemes_list = load_ligand('heme.list')
     steroid_list = load_ligand('steroid.list')
     control_list = load_ligand('control.list')
-
     load_voxel(files, args.nFile, nucleotides_list , hemes_list , steroid_list,
     control_list)
 
