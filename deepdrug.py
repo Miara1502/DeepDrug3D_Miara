@@ -53,11 +53,9 @@ def load_voxel(voxel_files , file_number, nucleotide_list , hemes_list,
             steroid = np.load(voxel)
             steroids.append(np.reshape(steroid,(14,32,32,32)))
 
-
     features = np.array(features)
     targets = np.array(targets)
     steroids = np.array(steroids)
-
     np.save('features', features)
     np.save('targets', targets)
     np.save('steroides', steroids)
@@ -68,6 +66,8 @@ def load_voxel(voxel_files , file_number, nucleotide_list , hemes_list,
 
 
 def main():
+    ''' Main of the programm 
+    '''
     parser=argparse.ArgumentParser(description="Deepdrug traitement fichiers.")
     parser.add_argument("-n", "--nb-files",
                         help="Selectionner le nombre de fichiers voxel à utiliser",
